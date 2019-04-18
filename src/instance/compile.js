@@ -54,14 +54,14 @@ function _compileTextNode (ele, vm) {
   directives.forEach((item) => {
     const textEle = document.createTextNode(item.value);
     ele.parentNode.appendChild(textEle);
-    // if (item.token) {
-    //   _bindDirective(textEle, item.value, 'text', vm);
-    //   _bindDirective('text', item.value, textEle, vm);
-    // }
+    if (item.token) {
+      _bindDirective(textEle, item.value, 'text', vm);
+      // _bindDirective('text', item.value, textEle, vm);
+    }
   })
   ele.parentNode.removeChild(ele);
 }
 
-function _bindDirective(el, value, type, vm) {
-  const dir = new Directive(el, value, type, vm);
+function _bindDirective(el, discriptor, type, vm) {
+  const dir = new Directive(el, discriptor, type, vm);
 }
