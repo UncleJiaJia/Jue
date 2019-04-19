@@ -15,6 +15,8 @@ function Watch(el, expression, update, vm) {
   this.el = el;
   this.expression = expression;
   this.vm = vm;
+  this.ctx = vm;
+  this.cb = update;
   this.isDep = false; // 用来判断是否放到__binddingWatch里，防止重复放置
   this.getter = transExpressionToFunc(expression);
   this.get();
@@ -25,16 +27,24 @@ function Watch(el, expression, update, vm) {
  * 获得当前vm实例下面对应的[expression]的值，如vm.user.name
  */
 Watch.prototype.get = function() {
-  this.value = this.getter.call(this.vm, this,vm);
+  this.value = this.getter.call(this.vm, this.vm.$data);
 }
 
 Watch.prototype.addDeps = function() {
   if (this.isDep) return;
   let vm = this.vm;
-  
+  let binding = vm._getBinding(this.expression);
+  console.log(vm)
+  binding.addSub(this);
 }
-/**
 
+Watch.prototype.update = function() {
+  let oldValue = this.value;
+  this.value = this.get();
+  this.cb.call(this.vm, this.value, oldValue);
+}
+
+/**
  * @param {String} user.name;
  * @return {Function} 一个参数为o,返回o.user.name的值的函数
  */

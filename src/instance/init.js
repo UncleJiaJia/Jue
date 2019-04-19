@@ -26,9 +26,18 @@ function initBindings(vm) {
   vm.observer.on('set', _updateBinding.bind(vm))
 }
 
+// 给个路径，返回路径对应的 bindings
 function _getBinding(path) {
-
-  
+  const nameArr = path.split('.');
+  let r = this._rootBindings;
+  nameArr.forEach((name) => {
+    if (r[name]) {
+      r = r[name];
+    } else {
+      r = r[name] = new Binding();
+    }
+  });
+  return r;
 }
 
 // 执行当前path下面，vm._rootBindings的对应的path的watchs
