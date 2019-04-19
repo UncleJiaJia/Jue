@@ -22,7 +22,13 @@ function initData(vm) {
 
 function initBindings(vm) {
   vm._rootBindings = new Binding();
+  vm._getBinding = _getBinding;
   vm.observer.on('set', _updateBinding.bind(vm))
+}
+
+function _getBinding(path) {
+
+  
 }
 
 // 执行当前path下面，vm._rootBindings的对应的path的watchs
