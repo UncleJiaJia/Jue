@@ -34,6 +34,7 @@ Watch.prototype.addDeps = function() {
   
 }
 /**
+
  * @param {String} user.name;
  * @return {Function} 一个参数为o,返回o.user.name的值的函数
  */
