@@ -9,6 +9,7 @@ const app = new Jue({
         city: 'guangzhou',
         area: 'haizhu'
       },
+      character: 'programmer',
       howToDo: ['i', 'like', 'peiyi']
     }
   }

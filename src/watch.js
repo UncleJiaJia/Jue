@@ -21,6 +21,7 @@ function Watch(el, expression, update, vm) {
   this.getter = transExpressionToFunc(expression);
   this.get();
   this.addDeps();
+  // this.update();
 }
 
 /**
@@ -34,7 +35,6 @@ Watch.prototype.addDeps = function() {
   if (this.isDep) return;
   let vm = this.vm;
   let binding = vm._getBinding(this.expression);
-  console.log(vm)
   binding.addSub(this);
 }
 

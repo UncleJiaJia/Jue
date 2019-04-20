@@ -1,9 +1,14 @@
-import { _init } from './instance/init.js';
+import someInitMethods from './instance/init.js';
 import { initElement, compile } from './instance/compile.js';
 // import directives from '@/directive.js';
 function Jue(options) {
   // 初始化，包括初始化observer，computed等
-  _init(this, options);
+  this._init(options);
+}
+
+Jue.prototype = {
+  constructor: Jue,
+  ...someInitMethods,
 }
 
 Jue.prototype.$amount = function() {
