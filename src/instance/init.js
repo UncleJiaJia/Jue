@@ -37,7 +37,7 @@ function _getBinding(path) {
       r = r[name] = new Binding();
     }
   });
-  console.log(this._rootBindings , r);
+  // console.log(this._rootBindings , r);
   return r;
 }
 
@@ -55,7 +55,7 @@ function _updateSelfBinding(event, path, value) {
   // 最终执行这个函数。并且把改变的数据的路径传过来，
   // 这个函数做的就是解析这个路径，找到vm[path]下的_subs，
   // 然后佢更新_subs下的一系列watch
-
+  // console.log('update', value);
   let pathArray = path.split('.');
   let r = this._rootBindings;
   for (let i = 0; i < pathArray.length; i++) {
@@ -66,7 +66,7 @@ function _updateSelfBinding(event, path, value) {
 
   let subs = r._subs;
   subs.forEach((watch) => {
-    watch.cb(value);
+    watch.update(value);
   });
 
   // let pathArray = path.split('.');

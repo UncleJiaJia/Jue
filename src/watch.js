@@ -11,11 +11,11 @@
  * @param {function} update 当前这个元素的更新方法
  * @param {*} vm vm实例
  */
-function Watch(el, expression, update, vm) {
-  this.el = el;
+function Watch(vm, expression, update, ctx) {
+  // this.el = el;
   this.expression = expression;
   this.vm = vm;
-  this.ctx = vm;
+  this.ctx = ctx;
   this.cb = update;
   this.isDep = false; // 用来判断是否放到__binddingWatch里，防止重复放置
   this.getter = transExpressionToFunc(expression);
@@ -38,10 +38,12 @@ Watch.prototype.addDeps = function() {
   binding.addSub(this);
 }
 
-Watch.prototype.update = function() {
+Watch.prototype.update = function(value) {
   let oldValue = this.value;
-  this.value = this.get();
-  this.cb.call(this.vm, this.value, oldValue);
+  // this.value = this.get();
+  this.value = value;
+  console.log(this.value, oldValue);
+  this.cb.call(this.ctx, this.value, oldValue);
 }
 
 /**

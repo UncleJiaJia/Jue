@@ -1,10 +1,10 @@
 import textParse from '@/parser/text.js';
 import Directive from '@/directive.js';
 
-export function initElement (vm) {
-  vm.el = document.querySelector(vm.$options.el)
-  if (!vm.el) {
-    console.warn('can not find element: ' + vm.$options.el)
+function initElement () {
+  this.el = document.querySelector(this.$options.el)
+  if (!this.el) {
+    console.warn('can not find element: ' + this.$options.el)
   }
 }
 
@@ -16,33 +16,54 @@ export function initElement (vm) {
     如果是text类型，根据正则抓取{{}}中的path,
     生成watch,链接 该元素和watch
 */
-export function compile (vm) {
-  if (!vm.el) return
-  _compileElement(vm.el, vm)
+let i = 0;
+function compile () {
+  if (!this.el) return
+  console.log(`执行了${++i}次`);
+  this._compileNode(this.el);
+  // this._compileElement(this.el)
 }
 
-function _compileElement (element, vm) {
-  element.childNodes.forEach((ele) => {
-    switch (ele.nodeType) {
-      // nodeType 1是元素节点
-      case 1:
-        _compileElement(ele, vm)
-        break
-      // nodeType 3是文本节点
-      case 3:
-        _compileTextNode(ele, vm)
-        break
-      default:
-        break
-    }
-  })
+function _compileNode(node) {
+  switch (node.nodeType) {
+    case 1:
+      this._compileElement(node);
+      break;
+    case 3:
+      this._compileTextNode(node);
+      break;
+    default:
+      return;
+  }
+  // console.log('compileNode', this);
 }
 
-function _compileTextNode (ele, vm) {
-  // console.log(ele.nodeValue)
+
+function _compileElement (node) {
+  // console.log(typeof element.childNodes);
+  // console.log(Array.isArray(element.childNodes));
+  // Array.from(element.childNodes).forEach((ele) => {
+  //   switch (ele.nodeType) {
+  //     // nodeType 1是元素节点
+  //     case 1:
+  //       this._compileElement(ele)
+  //       break
+  //     // nodeType 3是文本节点
+  //     case 3:
+  //       this._compileTextNode(ele)
+  //       break
+  //     default:
+  //       break
+  //   }
+  // })
+  if (node.hasChildNodes()) {
+    Array.from(node.childNodes).forEach(this._compileNode, this);
+  }
+}
+
+function _compileTextNode (ele) {
   const directives = textParse(ele.nodeValue)
   if (!directives) return
-  console.log('directives', directives)
   // TODO 
   // 遍历directives, 如果子项有token这个字段，
   // 则代表这个子项是一个text指令，那么new一个指令（Directive)
@@ -55,13 +76,23 @@ function _compileTextNode (ele, vm) {
     const textEle = document.createTextNode(item.value);
     ele.parentNode.appendChild(textEle);
     if (item.token) {
-      _bindDirective(textEle, item.value, 'text', vm);
+      this._bindDirective(textEle, item.value, 'text', this);
       // _bindDirective('text', item.value, textEle, vm);
     }
   })
+  // console.log('compileTextNode', this);
   ele.parentNode.removeChild(ele);
 }
 
 function _bindDirective(el, discriptor, type, vm) {
   const dir = new Directive(el, discriptor, type, vm);
+}
+
+export default {
+  _bindDirective,
+  _compileElement,
+  _compileTextNode,
+  _compileNode,
+  compile,
+  initElement
 }

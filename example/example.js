@@ -16,4 +16,4 @@ const app = new Jue({
 });
 
 window.app = app;
-app.$amount();
+// app.$amount();

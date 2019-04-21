@@ -55,7 +55,7 @@ Observer.prototype.convert = function (key, val) {
     enumerable: true,
     configurable: true,
     get: function () {
-      console.log(`访问${key},值为${val}`)
+      // console.log(`访问${key},值为${val}`)
       return val
     },
     set: function (newVal) {

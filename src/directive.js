@@ -5,7 +5,7 @@ function Directive(el, expression, type, vm) {
   this.el = el;
   this.expression = expression;
   mixinDireMethod(this, type);
-  this.watch = new Watch(el, expression, this._update, vm);
+  this.watch = new Watch(vm, expression, this._update, this);
   // this.watch.value = this.vm[expression]的值
   this._update(this.watch.value);
 }
@@ -22,7 +22,6 @@ function mixinDireMethod(target, type) {
       target[key] = ori_obj[key];
     }
   }
-  console.log(target);
 }
 
 export default Directive;
