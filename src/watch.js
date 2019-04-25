@@ -1,5 +1,6 @@
 
 
+
 /**
  * 初始化这个Watch类的时候，主要做几件事
  * A、获得当前vm实例下面对应的[expression]的值，如vm.user.name
@@ -29,6 +30,7 @@ function Watch(vm, expression, update, ctx) {
  */
 Watch.prototype.get = function() {
   this.value = this.getter.call(this.vm, this.vm.$data);
+  console.log('get()', this.value);
 }
 
 Watch.prototype.addDeps = function() {
@@ -40,8 +42,8 @@ Watch.prototype.addDeps = function() {
 
 Watch.prototype.update = function(value) {
   let oldValue = this.value;
-  // this.value = this.get();
-  this.value = value;
+  this.get();
+  // this.value = value;
   console.log(this.value, oldValue);
   this.cb.call(this.ctx, this.value, oldValue);
 }

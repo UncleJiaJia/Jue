@@ -1,4 +1,4 @@
-import Jue from '../src/index.js';
+import Jue from '../src/index.js'
 
 const app = new Jue({
   el: '#app',
@@ -13,7 +13,11 @@ const app = new Jue({
       howToDo: ['i', 'like', 'peiyi']
     }
   }
-});
+})
 
-window.app = app;
-// app.$amount();
+window.app = app
+setTimeout(() => {
+  app.$data.userInfo.address.city = '广州';
+  app.$data.userInfo.address.city = '深圳';
+}, 3000)
+// app.$amount()
