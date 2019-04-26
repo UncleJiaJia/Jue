@@ -12,6 +12,10 @@ function _init (options) {
   this._initData()
 
   this._initBindings()
+
+  this._initComputed()
+
+  console.log(this.$data)
 }
 
 // 初始化数据，数据监听这一块
@@ -25,6 +29,7 @@ function _initData () {
 function _initBindings () {
   this._rootBindings = new Binding()
   // this._getBinding = _getBinding
+  // this.observer.on('get', this._addComputedBinding.bind(this))
   this.observer.on('set', this._updateBinding.bind(this))
 }
 
@@ -68,9 +73,9 @@ function _updateSelfBinding (event, path, value) {
 
   let subs = r._subs
   subs.forEach((watch) => {
-    // watch.update(value);
-    batcher.nextTick(watch);
-  });
+    // watch.update(value)
+    batcher.nextTick(watch)
+  })
 
   // let pathArray = path.split('.')
 
@@ -88,10 +93,45 @@ function _updateSelfBinding (event, path, value) {
 // })
 }
 
+function _initComputed () {
+  if (!this.$options.computed) return
+  let computed = this.$options.computed
+  for (let key in computed) {
+    if (computed.hasOwnProperty(key)) {
+      Object.defineProperty(this.$data, key, {
+        configurable: true,
+        enumerable: true,
+        get: computed[key],
+        set: function () {
+          console.error('unabled to set computed property!')
+        }
+      })
+    }
+  }
+}
+
+function _addComputedBinding (event, path, value) {
+  let pathArray = path.split('.');
+  let r = this._rootBindings;
+
+  for (let i = 0; i < pathArray.length; i++) {
+    let key = pathArray[i]
+    if (!r[key]) {
+      r[key] = new Binding();
+    }
+    r = r[key];
+  }
+  const watch = this.current_watch;
+  watch.addDeps(path);
+  // r.addSub(watch);
+}
+
 export default {
   _init,
   _initData,
   _initBindings,
+  _initComputed,
   _getBinding,
   _updateBinding,
-_updateSelfBinding}
+  _updateSelfBinding,
+_addComputedBinding}

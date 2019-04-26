@@ -12,7 +12,12 @@ const app = new Jue({
       character: 'programmer',
       howToDo: ['i', 'like', 'peiyi']
     }
-  }
+  },
+  computed: {
+    addname: function() {
+      return this.userInfo.name + this.userInfo.address.city;
+    }
+  },
 })
 
 window.app = app

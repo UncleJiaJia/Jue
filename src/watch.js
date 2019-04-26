@@ -1,5 +1,6 @@
 
 
+import Observer from '@/observer/index.js';
 
 /**
  * 初始化这个Watch类的时候，主要做几件事
@@ -18,10 +19,10 @@ function Watch(vm, expression, update, ctx) {
   this.vm = vm;
   this.ctx = ctx;
   this.cb = update;
-  this.isDep = false; // 用来判断是否放到__binddingWatch里，防止重复放置
+  this.isDep = {}; // 用来判断是否放到__binddingWatch里，防止重复放置
   this.getter = transExpressionToFunc(expression);
   this.get();
-  this.addDeps();
+  this.addDeps(this.expression);
   // this.update();
 }
 
@@ -29,14 +30,27 @@ function Watch(vm, expression, update, ctx) {
  * 获得当前vm实例下面对应的[expression]的值，如vm.user.name
  */
 Watch.prototype.get = function() {
+  this.beforeGetter();
   this.value = this.getter.call(this.vm, this.vm.$data);
-  console.log('get()', this.value);
+  this.afterGetter();
+  // console.log('get()', this.value);
 }
 
-Watch.prototype.addDeps = function() {
-  if (this.isDep) return;
+Watch.prototype.beforeGetter = function () {
+  Observer.emitGet = true;
+  this.vm.current_watch = this;
+}
+
+Watch.prototype.afterGetter = function () {
+  Observer.emitGet = false;
+  this.vm.current_watch = null;
+}
+
+Watch.prototype.addDeps = function(path) {
+  if (this.isDep[path]) return;
+  this.isDep[path] = true;
   let vm = this.vm;
-  let binding = vm._getBinding(this.expression);
+  let binding = vm._getBinding(path);
   binding.addSub(this);
 }
 

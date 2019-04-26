@@ -1,0 +1,10 @@
+实现computed，也是利用前面binding watch那一套，
+A、将computed对应的函数，作为该getter，然后没有setter
+C、怎么在元素compile到这个属性的时候，知道这个属性是一个computed属性呢！？
+  不用知道，应该是在watch的时候，每个watch，执行
+B、然后要收集依赖，就是你这个computed,是依赖于哪些个属性的，
+  那怎么收集依赖，方法就是执行一遍这个computed, 执行的时候，
+  这个方法会去访问对应的依赖（属性），就会触发对应属性的getter，
+  那么在getter的时候，去notify这个事件到顶层，
+  顶层监听这个事件，一旦有事件被触发，就添加当前的watch？？到对应的依赖的bindings里
+  然后，对应的依赖变更的时候，就会去触发该watch的更新方法啦！

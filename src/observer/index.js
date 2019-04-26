@@ -55,6 +55,9 @@ Observer.prototype.convert = function (key, val) {
     enumerable: true,
     configurable: true,
     get: function () {
+      if (Observer.emitGet) {
+        ob.notify('get', key, val);
+      }
       // console.log(`访问${key},值为${val}`)
       return val
     },
