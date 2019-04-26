@@ -21,8 +21,8 @@ function Watch(vm, expression, update, ctx) {
   this.cb = update;
   this.isDep = {}; // 用来判断是否放到__binddingWatch里，防止重复放置
   this.getter = transExpressionToFunc(expression);
-  this.get();
   this.addDeps(this.expression);
+  this.get();
   // this.update();
 }
 
@@ -57,6 +57,7 @@ Watch.prototype.addDeps = function(path) {
 Watch.prototype.update = function(value) {
   let oldValue = this.value;
   this.get();
+  // this.value = this.getter.call(this.vm, this.vm.$data);
   // this.value = value;
   console.log(this.value, oldValue);
   this.cb.call(this.ctx, this.value, oldValue);

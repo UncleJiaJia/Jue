@@ -29,7 +29,7 @@ function _initData () {
 function _initBindings () {
   this._rootBindings = new Binding()
   // this._getBinding = _getBinding
-  // this.observer.on('get', this._addComputedBinding.bind(this))
+  this.observer.on('get', this._addComputedBinding.bind(this))
   this.observer.on('set', this._updateBinding.bind(this))
 }
 
@@ -123,7 +123,6 @@ function _addComputedBinding (event, path, value) {
   }
   const watch = this.current_watch;
   watch.addDeps(path);
-  // r.addSub(watch);
 }
 
 export default {
@@ -134,4 +133,5 @@ export default {
   _getBinding,
   _updateBinding,
   _updateSelfBinding,
-_addComputedBinding}
+  _addComputedBinding,
+}
