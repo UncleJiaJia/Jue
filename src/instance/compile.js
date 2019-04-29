@@ -1,5 +1,11 @@
 import textParse from '@/parser/text.js';
 import Directive from '@/directive.js';
+import DomUtils from '@/utils/dom.js';
+
+// 这个指令集是按照优先级的，比如说，for的指令比if高
+const privateAttrs = [
+  'if',
+]
 
 function initElement () {
   this.el = document.querySelector(this.$options.el)
@@ -16,10 +22,8 @@ function initElement () {
     如果是text类型，根据正则抓取{{}}中的path,
     生成watch,链接 该元素和watch
 */
-let i = 0;
 function compile () {
   if (!this.el) return
-  console.log(`执行了${++i}次`);
   this._compileNode(this.el);
   // this._compileElement(this.el)
 }
@@ -40,22 +44,13 @@ function _compileNode(node) {
 
 
 function _compileElement (node) {
-  // console.log(typeof element.childNodes);
-  // console.log(Array.isArray(element.childNodes));
-  // Array.from(element.childNodes).forEach((ele) => {
-  //   switch (ele.nodeType) {
-  //     // nodeType 1是元素节点
-  //     case 1:
-  //       this._compileElement(ele)
-  //       break
-  //     // nodeType 3是文本节点
-  //     case 3:
-  //       this._compileTextNode(ele)
-  //       break
-  //     default:
-  //       break
-  //   }
-  // })
+  // 这个方法用来判断当前这个 Element元素节点是否有设置了特性
+  let hasAttributes = node.hasAttributes();
+  // 如果有特性，并且有自定义特性，就不接着走了
+  if (hasAttributes && this._checkPrivateAttr(node)) {
+    return;
+  }
+
   if (node.hasChildNodes()) {
     Array.from(node.childNodes).forEach(this._compileNode, this);
   }
@@ -88,11 +83,24 @@ function _bindDirective(el, discriptor, type, vm) {
   const dir = new Directive(el, discriptor, type, vm);
 }
 
+
+function _checkPrivateAttr(node) {
+  for (let i = 0; i < privateAttrs.length; i++) {
+    const dir = privateAttrs[i];
+    const value = DomUtils.attr(node, dir);
+    if (value) {
+      // this._bindDirective(node, value, dir, this);
+      return true;
+    }
+  }
+}
+
 export default {
   _bindDirective,
   _compileElement,
   _compileTextNode,
   _compileNode,
+  _checkPrivateAttr,
   compile,
   initElement
 }

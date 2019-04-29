@@ -10,6 +10,10 @@
   <div id="app">
     <div>app {{userInfo.name}} is a good {{userInfo.character}}!</div>
     <div>{{addname}}</div>
+    <div j-if="{{userInfo.name}}">
+      <div>{{userInfo.name}}</div>
+      <div>{{userInfo.character}}</div>
+    </div>
   </div>
   <!-- <script src="./example.js"></script> -->
 </body>
