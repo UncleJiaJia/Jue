@@ -1,0 +1,35 @@
+process.argv 这是个什么东西？
+  返回一个数组
+  数组的第一项是process.execPath
+  数组的第二项是正在执行的文件的路径
+  其余元素是任何其他命令参数
+  例
+    $ node process-args.js one two=three four
+      0: /usr/local/bin/node
+      1: /Users/mjr/work/node/process-args.js
+      2: one
+      3: two=three
+      4: four
+fs模块
+  引用模块：var fs = require('fs');
+  读取文件的方法 
+  A 同步版本
+    fs.readFileSync('文件路径');
+    读取到的文件是buffer对
+    或者加一个参数，fs.readFileSync('', 'utf-8');
+    这个就返回字符串对象
+  B 异步版本
+    fs.readFile('路径', 'utf-8', callback);
+    注意：callback的规范，第一个参数永远是 err(即错误的参数);
+  
+  读取文件夹的方法
+    fs.readdir('文件夹名', callback);
+  
+path模块
+  path.extname('文件名') 返回文件名最后一个'.'开始（包括）的那一部分
+  例：
+    path.extname('index.html'); // '.html'
+    path.extname('index.coffee.md'); // '.md'
+    path.extname('index.'); // '.'
+    path.extname('index'); // ''
+    path.extname('.index'); // ''
